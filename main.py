@@ -1,5 +1,9 @@
+from loadInstance import loadInstance
+
+
 def main():
-    print("Hello World.")
+    sortedVehicles, lanes, vehicleLaneMatrix = loadInstance("instanca1.txt")
+    print(vehicleLaneMatrix)
 
 if __name__ == "__main__":
     main()
