@@ -20,9 +20,6 @@ def loadInstance(fileName):
 
     vehicleLaneMatrix = np.array(linesArrayed[7: 7 + vehicleAmount], dtype=int)
 
-    assert vehicleLaneMatrix.shape[0] == vehicleAmount
-    assert vehicleLaneMatrix.shape[1] == laneAmount
-
     laneLengths = np.array(linesArrayed[7 + vehicleAmount + 1], dtype=int)
 
     departureTimes = np.array(linesArrayed[7 + vehicleAmount + 3], dtype=int)

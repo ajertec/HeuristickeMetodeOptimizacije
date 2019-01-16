@@ -5,11 +5,13 @@ from solution import addToSolutions, outputSolution
 from node import evaluateNode, evaluateNode1, evaluateNode2, addNodeToList
 
 
+# WIP
 # checks if the node state is allowed based on the rules
 def allowed(node, vehicles, lanes, vehicleLaneMatrix):
     return False
 
 
+# WIP
 # explores the given node, updates the solutions if it is a solution and nodesToVisit with next steps
 def exploreNode(node, vehicles, lanes, vehicleLaneMatrix, solutions, nodesToVisit):
     if not allowed(node, vehicles, lanes, vehicleLaneMatrix):
@@ -24,6 +26,7 @@ def stillSomeTimeLeft(unlimited, startTime, timeAllowed):
     return ((time.time() - startTime) < timeAllowed)
 
 
+# WIP
 def main():
     vehicles, lanes, vehicleLaneMatrix = loadInstance("instanca1.txt")
 
