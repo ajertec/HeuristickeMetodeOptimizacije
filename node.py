@@ -171,10 +171,10 @@ def evaluateNode2(node, vehicles, lanes):
 # WIP
 # evaluates the node and modifies it with evaluated number for easier sorting
 def evaluateNode(node):
-    print("placeholder")
+    node["eval"] = 1
 
 
 # WIP
 # adds the node to the list and sorts the list
 def addNodeToList(node, nodesToVisit):
-    print("placeholder")
+    nodesToVisit.append(node)

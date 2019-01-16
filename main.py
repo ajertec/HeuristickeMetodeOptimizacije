@@ -1,4 +1,5 @@
 import time
+import copy
 
 from loadInstance import loadInstance
 from solution import addToSolutions, outputSolution
@@ -8,14 +9,59 @@ from node import evaluateNode, evaluateNode1, evaluateNode2, addNodeToList
 # WIP
 # checks if the node state is allowed based on the rules
 def allowed(node, vehicles, lanes, vehicleLaneMatrix):
-    return False
+    workingVehicle = vehicles[node["workingVehicleIndex"]][1]
+
+    if vehicleLaneMatrix[workingVehicle["id"] - 1][node["targetLane"]] == 0:
+        if node["workingVehicleIndex"] == 4:
+            print("matrix problem")
+        return False
+
+    for vehicleIndex in node["lanes"][node["targetLane"]]:
+        if workingVehicle["series"] != vehicles[vehicleIndex][1]["series"]:
+            if node["workingVehicleIndex"] == 4:
+                print("series problem", workingVehicle,
+                      vehicles[vehicleIndex][1])
+            return False
+        else:
+            break
+
+    lengthSum = 0.5 * (len(node["lanes"][node["targetLane"]]) - 1)
+    for vehicleIndex in node["lanes"][node["targetLane"]]:
+        lengthSum = lengthSum + vehicles[vehicleIndex][1]["length"]
+
+    if lengthSum > lanes[node["targetLane"]]["length"]:
+        if node["workingVehicleIndex"] == 4:
+            print("length problem")
+        return False
+
+    return True
 
 
 # WIP
 # explores the given node, updates the solutions if it is a solution and nodesToVisit with next steps
 def exploreNode(node, vehicles, lanes, vehicleLaneMatrix, solutions, nodesToVisit):
-    if not allowed(node, vehicles, lanes, vehicleLaneMatrix):
+
+    workingVehicleIndex = node["workingVehicleIndex"]
+    if workingVehicleIndex == (len(vehicles) - 1):
+        node["eval1"] = evaluateNode1(node, vehicles, lanes)
+        node["eval2"] = evaluateNode2(node, vehicles, lanes)
+        evaluateNode(node)
+        addToSolutions(node, solutions)
         return
+
+    workingVehicleIndex = workingVehicleIndex + 1
+    for laneIndex in range(len(lanes)):
+        newNode = {
+            "targetLane": laneIndex,
+            "workingVehicleIndex": workingVehicleIndex,
+            "lanes": copy.deepcopy(node["lanes"])
+        }
+        newNode["lanes"][laneIndex].append(workingVehicleIndex)
+
+        if allowed(newNode, vehicles, lanes, vehicleLaneMatrix):
+            addNodeToList(newNode, nodesToVisit)
+        else:
+            print(laneIndex)
 
 
 # checks if there is still time left for the algorithm to run
@@ -31,11 +77,13 @@ def main():
     vehicles, lanes, vehicleLaneMatrix = loadInstance("instanca1.txt")
 
     firstNode = {
-        "activeVehicle": {},  # adding new children nodes in exploreNode
-        "targetedLane": {},  # also empty, added in exploreNode
-        "children": {},  # added in exploreNode, possibly useless
-        "lanes": {},  # holds all vehicle IDs in particular lane, every node should have it's own instance of this variable, vehicle infos are acquired through vehicles variable
+        "targetLane": -1,  # also empty, added in exploreNode
+        "lanes": [],  # holds all vehicle IDs in particular lane, every node should have it's own instance of this variable, vehicle infos are acquired through vehicles variable
+        "workingVehicleIndex": -1
     }
+
+    for i in range(len(lanes)):
+        firstNode["lanes"].append([])
 
     nodesToVisit = []
     solutions = []
