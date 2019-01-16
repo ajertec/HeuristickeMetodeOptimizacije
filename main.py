@@ -1,20 +1,23 @@
 import time
 
 from loadInstance import loadInstance
-from evaluators import evaluator1, evaluator2
 from solution import addToSolutions, outputSolution
+from node import evaluateNode, evaluateNode1, evaluateNode2, addNodeToList
 
 
+# checks if the node state is allowed based on the rules
 def allowed(node, vehicles, lanes, vehicleLaneMatrix):
     return False
 
 
+# explores the given node, updates the solutions if it is a solution and nodesToVisit with next steps
 def exploreNode(node, vehicles, lanes, vehicleLaneMatrix, solutions, nodesToVisit):
     if not allowed(node, vehicles, lanes, vehicleLaneMatrix):
         return
 
 
-def someTimeLeft(unlimited, startTime, timeAllowed):
+# checks if there is still time left for the algorithm to run
+def stillSomeTimeLeft(unlimited, startTime, timeAllowed):
     if unlimited:
         return True
 
@@ -36,7 +39,7 @@ def main():
 
     startTime = time.time()
     time.clock()
-    while nodesToVisit and someTimeLeft(False, startTime, 60):
+    while nodesToVisit and stillSomeTimeLeft(False, startTime, 60):
         workingNode = nodesToVisit.pop(0)
         exploreNode(workingNode, vehicles, lanes,
                     vehicleLaneMatrix, solutions, nodesToVisit)
