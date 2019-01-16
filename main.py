@@ -30,9 +30,11 @@ def stillSomeTimeLeft(unlimited, startTime, timeAllowed):
 def main():
     vehicles, lanes, vehicleLaneMatrix = loadInstance("instanca1.txt")
 
-    # make a node here
     firstNode = {
-
+        "activeVehicle": {},  # adding new children nodes in exploreNode
+        "targetedLane": {},  # also empty, added in exploreNode
+        "children": {},  # added in exploreNode, possibly useless
+        "lanes": {},  # holds all vehicle IDs in particular lane, every node should have it's own instance of this variable, vehicle infos are acquired through vehicles variable
     }
 
     nodesToVisit = []
