@@ -28,7 +28,21 @@ def outputSolution(solutions):
     writeSolution(currentBestSolution)
 
 
-# WIP
 # prints out the solution in the required format
-def writeSolution(node):
-    print(node)
+def writeSolution(node, vehicles, filename):
+
+    with open(filename, w) as outfile:
+
+        lanesLength = len(node["lanes"])
+        j = 0
+        for lane in node["lanes"]:
+            for vehicleIndex in lane:
+                
+                vehicleId = vehicles[vehicleIndex][1]["id"]
+
+                outfile.write(str(vehicleId))
+                outfile.write(" ")
+            j += 1
+            if j != lanesLength:
+                outfile.write("\n")
+
