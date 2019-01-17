@@ -12,15 +12,11 @@ def allowed(node, vehicles, lanes, vehicleLaneMatrix):
     workingVehicle = vehicles[node["workingVehicleIndex"]][1]
 
     if vehicleLaneMatrix[workingVehicle["id"] - 1][node["targetLane"]] == 0:
-        if node["workingVehicleIndex"] == 4:
-            print("matrix problem")
         return False
 
     for vehicleIndex in node["lanes"][node["targetLane"]]:
         if workingVehicle["series"] != vehicles[vehicleIndex][1]["series"]:
-            if node["workingVehicleIndex"] == 4:
-                print("series problem", workingVehicle,
-                      vehicles[vehicleIndex][1])
+
             return False
         else:
             break
@@ -30,8 +26,6 @@ def allowed(node, vehicles, lanes, vehicleLaneMatrix):
         lengthSum = lengthSum + vehicles[vehicleIndex][1]["length"]
 
     if lengthSum > lanes[node["targetLane"]]["length"]:
-        if node["workingVehicleIndex"] == 4:
-            print("length problem")
         return False
 
     return True
@@ -45,7 +39,6 @@ def exploreNode(node, vehicles, lanes, vehicleLaneMatrix, solutions, nodesToVisi
     if workingVehicleIndex == (len(vehicles) - 1):
         node["eval1"] = evaluateNode1(node, vehicles, lanes)
         node["eval2"] = evaluateNode2(node, vehicles, lanes)
-        evaluateNode(node)
         addToSolutions(node, solutions)
         return
 
@@ -60,8 +53,6 @@ def exploreNode(node, vehicles, lanes, vehicleLaneMatrix, solutions, nodesToVisi
 
         if allowed(newNode, vehicles, lanes, vehicleLaneMatrix):
             addNodeToList(newNode, nodesToVisit)
-        else:
-            print(laneIndex)
 
 
 # checks if there is still time left for the algorithm to run
@@ -69,7 +60,11 @@ def stillSomeTimeLeft(unlimited, startTime, timeAllowed):
     if unlimited:
         return True
 
-    return ((time.time() - startTime) < timeAllowed)
+    if ((time.time() - startTime) < timeAllowed):
+        return True
+    else:
+        print("no time left")
+        return False
 
 
 # WIP
@@ -97,7 +92,7 @@ def main():
         exploreNode(workingNode, vehicles, lanes,
                     vehicleLaneMatrix, solutions, nodesToVisit)
 
-    outputSolution(solutions)
+    outputSolution(solutions, vehicles)
 
 
 if __name__ == "__main__":
