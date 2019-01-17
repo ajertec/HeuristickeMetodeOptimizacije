@@ -5,13 +5,12 @@ from node import evaluateNode
 
 
 def addToSolutions(node, solutions):
-    evaluateNode(node)
     solutions.append(node)
 
 
 # WIP
 # finds best solution and calls writeSolution
-def outputSolution(solutions):
+def outputSolution(solutions, vehicles):
     if len(solutions) == 0:
         print("no solution found")
         return
@@ -25,10 +24,11 @@ def outputSolution(solutions):
             currentMaxValue = workingValue
             currentBestSolution = sol
 
-    writeSolution(currentBestSolution)
+    writeSolution(currentBestSolution, vehicles)
 
 
 # prints out the solution in the required format
+<<<<<<< HEAD
 def writeSolution(node, vehicles, filename):
 
     with open(filename, w) as outfile:
@@ -46,3 +46,7 @@ def writeSolution(node, vehicles, filename):
             if j != lanesLength:
                 outfile.write("\n")
 
+=======
+def writeSolution(node, vehicles):
+    print(node)
+>>>>>>> master
