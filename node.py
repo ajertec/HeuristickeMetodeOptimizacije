@@ -169,8 +169,6 @@ def evaluateNode(node, vehicles, lanes):
     node["eval"] = 0
 
 
-# WIP
-# adds the node to the list and sorts the list
 def addNodeToList(node, nodesToVisit):
     insertionIndex = 0
     for index in range(len(nodesToVisit)):

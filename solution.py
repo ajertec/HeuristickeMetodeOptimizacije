@@ -1,14 +1,11 @@
 from node import evaluateNode, evaluateNode1, evaluateNode2
 
-# WIP
-# adds the node to solutions, possibly sorting them
-
 
 def addToSolutions(node, solutions):
     solutions.append(node)
 
 
-def sortSolutions(solutions, vehicles, lanes):
+def filterSolutions(solutions, vehicles, lanes):
     newSolutions = []
 
     for solution in solutions:
@@ -47,13 +44,11 @@ def sortSolutions(solutions, vehicles, lanes):
             newSolutions.append(solution)
 
     return newSolutions
-# WIP
-# finds best solution and calls writeSolution
 
 
 def outputSolution(solutions, vehicles, lanes, filename):
     print("prior solutions ", len(solutions))
-    solutions = sortSolutions(solutions, vehicles, lanes)
+    solutions = filterSolutions(solutions, vehicles, lanes)
     if len(solutions) == 0:
         print("no solution found")
         return
@@ -71,7 +66,6 @@ def outputSolution(solutions, vehicles, lanes, filename):
     writeSolution(currentBestSolution, vehicles, filename)
 
 
-# prints out the solution in the required format
 def writeSolution(node, vehicles, filename):
     print(node)
     with open(filename, "w") as outfile:
