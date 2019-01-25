@@ -165,12 +165,17 @@ def evaluateNode2(node, vehicles, lanes):
 
 # WIP
 # evaluates the node and modifies it with evaluated number for easier sorting
-def evaluateNode(node):
-    node["eval"] = 1
+def evaluateNode(node, vehicles, lanes):
+    node["eval"] = 0
 
 
 # WIP
 # adds the node to the list and sorts the list
 def addNodeToList(node, nodesToVisit):
-    evaluateNode(node)
-    nodesToVisit.insert(0, node)
+    insertionIndex = 0
+    for index in range(len(nodesToVisit)):
+        if node["eval"] >= nodesToVisit[index]["eval"]:
+            insertionIndex = index
+            break
+
+    nodesToVisit.insert(insertionIndex, node)
