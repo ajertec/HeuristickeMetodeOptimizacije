@@ -28,6 +28,29 @@ def allowed(node, vehicles, lanes, vehicleLaneMatrix):
     if lengthSum > lanes[node["targetLane"]]["length"]:
         return False
 
+    for laneIndex in range(len(lanes)):
+        if len(lanes[laneIndex]["blocked"]) == 0:
+            continue
+
+        blockingVehicles = node["lanes"][laneIndex]
+        if len(blockingVehicles) == 0:
+            continue
+
+        lastInBlockingIndex = blockingVehicles[len(blockingVehicles) - 1]
+
+        for blockedNumber in lanes[laneIndex]["blocked"]:
+            blockedIndex = blockedNumber - 1
+
+            blockedVehicles = node["lanes"][blockedIndex]
+
+            if len(blockedVehicles) == 0:
+                continue
+
+            firstInBlockedIndex = blockedVehicles[0]
+
+            if vehicles[lastInBlockingIndex][1]["departureTime"] > vehicles[firstInBlockedIndex][1]["departureTime"]:
+                return False
+
     return True
 
 
@@ -36,9 +59,8 @@ def allowed(node, vehicles, lanes, vehicleLaneMatrix):
 def exploreNode(node, vehicles, lanes, vehicleLaneMatrix, solutions, nodesToVisit):
 
     workingVehicleIndex = node["workingVehicleIndex"]
+    print(workingVehicleIndex)
     if workingVehicleIndex == (len(vehicles) - 1):
-        node["eval1"] = evaluateNode1(node, vehicles, lanes)
-        node["eval2"] = evaluateNode2(node, vehicles, lanes)
         addToSolutions(node, solutions)
         return
 
@@ -52,6 +74,7 @@ def exploreNode(node, vehicles, lanes, vehicleLaneMatrix, solutions, nodesToVisi
         newNode["lanes"][laneIndex].append(workingVehicleIndex)
 
         if allowed(newNode, vehicles, lanes, vehicleLaneMatrix):
+            evaluateNode(newNode, vehicles, lanes)
             addNodeToList(newNode, nodesToVisit)
 
 
@@ -71,6 +94,8 @@ def stillSomeTimeLeft(unlimited, startTime, timeAllowed):
 def main():
     vehicles, lanes, vehicleLaneMatrix = loadInstance("instanca1.txt")
 
+    print(len(vehicles))
+    print(lanes)
     firstNode = {
         "targetLane": -1,  # also empty, added in exploreNode
         "lanes": [],  # holds all vehicle IDs in particular lane, every node should have it's own instance of this variable, vehicle infos are acquired through vehicles variable
@@ -87,12 +112,12 @@ def main():
 
     startTime = time.time()
     time.clock()
-    while nodesToVisit and stillSomeTimeLeft(False, startTime, 60):
+    while nodesToVisit and stillSomeTimeLeft(False, startTime, 1 * 60):
         workingNode = nodesToVisit.pop(0)
         exploreNode(workingNode, vehicles, lanes,
                     vehicleLaneMatrix, solutions, nodesToVisit)
 
-    outputSolution(solutions, vehicles)
+    outputSolution(solutions, vehicles, lanes, "res-1m-i1.txt")
 
 
 if __name__ == "__main__":

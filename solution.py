@@ -1,4 +1,4 @@
-from node import evaluateNode
+from node import evaluateNode, evaluateNode1, evaluateNode2
 
 # WIP
 # adds the node to solutions, possibly sorting them
@@ -8,9 +8,52 @@ def addToSolutions(node, solutions):
     solutions.append(node)
 
 
+def sortSolutions(solutions, vehicles, lanes):
+    newSolutions = []
+
+    for solution in solutions:
+        allowed = True
+
+        for laneIndex in range(len(lanes)):
+            if not allowed:
+                break
+
+            if len(lanes[laneIndex]["blocked"]) == 0:
+                continue
+
+            blockingVehicles = solution["lanes"][laneIndex]
+            if len(blockingVehicles) == 0:
+                continue
+
+            lastInBlockingIndex = blockingVehicles[len(blockingVehicles) - 1]
+
+            for blockedNumber in lanes[laneIndex]["blocked"]:
+                blockedIndex = blockedNumber - 1
+
+                blockedVehicles = solution["lanes"][blockedIndex]
+
+                if len(blockedVehicles) == 0:
+                    continue
+
+                firstInBlockedIndex = blockedVehicles[0]
+
+                if vehicles[lastInBlockingIndex][1]["departureTime"] > vehicles[firstInBlockedIndex][1]["departureTime"]:
+                    allowed = False
+                    break
+
+        if allowed:
+            solution["eval1"] = evaluateNode1(solution, vehicles, lanes)
+            solution["eval2"] = evaluateNode2(solution, vehicles, lanes)
+            newSolutions.append(solution)
+
+    return newSolutions
 # WIP
 # finds best solution and calls writeSolution
-def outputSolution(solutions, vehicles):
+
+
+def outputSolution(solutions, vehicles, lanes, filename):
+    print("prior solutions ", len(solutions))
+    solutions = sortSolutions(solutions, vehicles, lanes)
     if len(solutions) == 0:
         print("no solution found")
         return
@@ -24,20 +67,20 @@ def outputSolution(solutions, vehicles):
             currentMaxValue = workingValue
             currentBestSolution = sol
 
-    writeSolution(currentBestSolution, vehicles)
+    print(len(solutions))
+    writeSolution(currentBestSolution, vehicles, filename)
 
 
 # prints out the solution in the required format
-<<<<<<< HEAD
 def writeSolution(node, vehicles, filename):
-
-    with open(filename, w) as outfile:
+    print(node)
+    with open(filename, "w") as outfile:
 
         lanesLength = len(node["lanes"])
         j = 0
         for lane in node["lanes"]:
             for vehicleIndex in lane:
-                
+
                 vehicleId = vehicles[vehicleIndex][1]["id"]
 
                 outfile.write(str(vehicleId))
@@ -45,8 +88,3 @@ def writeSolution(node, vehicles, filename):
             j += 1
             if j != lanesLength:
                 outfile.write("\n")
-
-=======
-def writeSolution(node, vehicles):
-    print(node)
->>>>>>> master
